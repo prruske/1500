@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Number Update</title>
+    <title>Dynamic Number with Dark Mode</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
+        :root {
+            --bg-color: #f0f0f0;
+            --text-color: #333;
+            --button-bg: #007bff;
+            --button-hover: #0056b3;
+        }
+
+        .dark-mode {
+            --bg-color: #333;
+            --text-color: #f0f0f0;
+            --button-bg: #444;
+            --button-hover: #666;
+        }
 
         body {
             display: flex;
@@ -14,14 +28,15 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             font-family: 'Montserrat', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .number {
             font-size: 100px;
             font-weight: bold;
-            color: #333;
             margin: 20px 0;
         }
 
@@ -32,25 +47,29 @@
             margin-bottom: 20px;
             border: 2px solid #ccc;
             border-radius: 5px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
 
         button {
             padding: 10px 20px;
             font-size: 18px;
             font-weight: bold;
-            color: #fff;
-            background-color: #007bff;
+            color: var(--text-color);
+            background-color: var(--button-bg);
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: var(--button-hover);
         }
     </style>
 </head>
 <body>
+    <button id="toggleTheme">Switch to Dark Mode</button>
     <div class="number" id="displayNumber">1500</div>
     <input type="number" id="inputNumber" placeholder="Enter a number">
     <button onclick="reduceNumber()">Subtract</button>
@@ -58,12 +77,19 @@
     <script>
         const displayNumberElement = document.getElementById('displayNumber');
         const inputNumberElement = document.getElementById('inputNumber');
+        const toggleThemeButton = document.getElementById('toggleTheme');
 
-        // Load the saved number or default to 1500
-        let currentNumber = localStorage.getItem('currentNumber') ? 
-                            parseInt(localStorage.getItem('currentNumber')) : 1500;
+        // Load saved number or default to 1500
+        let currentNumber = localStorage.getItem('currentNumber') 
+            ? parseInt(localStorage.getItem('currentNumber')) 
+            : 1500;
         displayNumberElement.textContent = currentNumber;
 
+        // Load saved theme or default to light mode
+        let isDarkMode = localStorage.getItem('isDarkMode') === 'true';
+        updateTheme();
+
+        // Reduce number function
         function reduceNumber() {
             const subtractValue = parseInt(inputNumberElement.value);
 
@@ -71,13 +97,30 @@
                 currentNumber -= subtractValue;
                 displayNumberElement.textContent = currentNumber;
 
-                // Save the updated number in localStorage
+                // Save updated number
                 localStorage.setItem('currentNumber', currentNumber);
 
-                // Clear the input field
+                // Clear input
                 inputNumberElement.value = '';
             } else {
                 alert('Please enter a valid number!');
+            }
+        }
+
+        // Theme toggle function
+        toggleThemeButton.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('isDarkMode', isDarkMode);
+            updateTheme();
+        });
+
+        function updateTheme() {
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                toggleThemeButton.textContent = 'Switch to Day Mode';
+            } else {
+                document.body.classList.remove('dark-mode');
+                toggleThemeButton.textContent = 'Switch to Dark Mode';
             }
         }
     </script>
