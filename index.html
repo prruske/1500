@@ -3,28 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display 1500</title>
+    <title>Dynamic Number Update</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
-        
+
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .number {
-            font-family: 'Montserrat', sans-serif;
             font-size: 100px;
             font-weight: bold;
             color: #333;
+            margin: 20px 0;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            font-size: 18px;
+            width: 200px;
+            margin-bottom: 20px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div class="number">1403</div>
+    <div class="number" id="displayNumber">1500</div>
+    <input type="number" id="inputNumber" placeholder="Enter a number">
+    <button onclick="reduceNumber()">Subtract</button>
+
+    <script>
+        const displayNumberElement = document.getElementById('displayNumber');
+        const inputNumberElement = document.getElementById('inputNumber');
+
+        // Load the saved number or default to 1500
+        let currentNumber = localStorage.getItem('currentNumber') ? 
+                            parseInt(localStorage.getItem('currentNumber')) : 1500;
+        displayNumberElement.textContent = currentNumber;
+
+        function reduceNumber() {
+            const subtractValue = parseInt(inputNumberElement.value);
+
+            if (!isNaN(subtractValue)) {
+                currentNumber -= subtractValue;
+                displayNumberElement.textContent = currentNumber;
+
+                // Save the updated number in localStorage
+                localStorage.setItem('currentNumber', currentNumber);
+
+                // Clear the input field
+                inputNumberElement.value = '';
+            } else {
+                alert('Please enter a valid number!');
+            }
+        }
+    </script>
 </body>
 </html>
